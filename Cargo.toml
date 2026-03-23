@@ -1,5 +1,6 @@
 [package]
 name         = "tuigreet"
+description  = "Stylish graphical console greeter for greetd, built with Ratatui "
 version      = "0.10.2"
 authors      = [ "Antoine POPINEAU <antoine@popineau.eu>", "NotAShelf <raf@notashelf.dev" ]
 edition      = "2024"

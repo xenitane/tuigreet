@@ -99,24 +99,42 @@ hitting `F2` and amending the command. Alternatively, you can list the
 system-declared sessions (or custom ones) by hitting `F3`. Power options are
 available through `F12`.
 
-## Install
+## Installing Tuigreet
 
-This fork is currently only packaged for the ArchLinux AUR. Tuigreet is also packaged
-in-repo via nix, and you may build from source if you are interested in using
-the fork. Should you wish to package this for your distribution, please do, and
-submit a pr to update the readme with per-distribution instructions. We will be happy
-to review :)
+[releases tab]: https://github.com/NotAShelf/tuigreet/releases/latest
 
-### From Arch Linux
+There are various methods of installing Tuigreet, and you're recommended to pick
+the appropriate method for your distribution or preferred package manager. We
+provide pre-built binaries for tagged releases, which can be obtained from the
+[releases tab]. Additionally, the maintainers of this project maintain packages
+for the Arch Linux AUR and Nix via flakes. If none of those interest you, you
+may build from source. Should you wish to package this for your distribution,
+please do, and submit a pull request to update the readme with per-distribution
+instructions. We will be happy to review :)
 
-On ArchLinux, two distributions are available from the [AUR](https://aur.archlinux.org/packages?O=0&K=tuigreet-fork): `greetd-tuigreet-fork-bin` is the precompiled binary for the latest tagged release and `greetd-tuigreet-fork-git` is available for the same tagged release, but you compile it yourself.
-Those can be installed via your preferred AUR helper.
-e.g.
+### From the AUR
+
+[AUR]: https://aur.archlinux.org/packages?O=0&K=tuigreet-fork
+
+On ArchLinux, two distributions are available from the [AUR].
+`greetd-tuigreet-fork-bin` is the precompiled binary for the latest tagged
+release, and `greetd-tuigreet-fork-git` is available for the same tagged
+release, but you compile it yourself from the latest commit Those can be
+installed via your preferred AUR helper, e.g.:
+
 ```bash
 yay -S greetd-tuigreet-fork-bin
 ```
 
 ### With Nix
+
+The main method of using the package for this fork is to use the package
+provided by the flake. The easiest way of doing so is creating an overlay as
+above but point `tuigreet` to
+`inputs.tuigreet.packages.${prev.hostPlatform.system}.tuigreet` instead of
+overriding the `src`. This will completely replace the derivation, and build
+with the correct source automatically. In most cases **this is preferred to
+overwriting the Nixpkgs derivation**.
 
 This fork is not packaged in Nixpkgs, but it is trivial to use the Nixpkgs
 derivation with the updated source information, should you wish to run it. For
@@ -140,13 +158,9 @@ example, you may create an overlay to override `pkgs.tuigreet` as follows:
 ]
 ```
 
-Alternatively, you may get it from the flake provided in this repository. In
-which case you may use the `default` or `tuigreet` packages. The easiest way of
-doing so is creating an overlay as above but point `tuigreet` to
-`inputs.tuigreet.packages.${prev.hostPlatform.system}.tuigreet` instead of
-overriding the `src`. This will completely replace the derivation, and build
-with the correct source automatically. In most cases **this is preferred to
-overwriting the Nixpkgs derivation**.
+Please keep in mind that packaging steps might change in the future. You are
+encouraged to use the package provided by the flake unless you have a really
+good reason not to.
 
 ### From source
 
@@ -180,32 +194,11 @@ $ chmod 0755 /var/cache/tuigreet
 
 ### Pre-built binaries
 
+[releases]: https://github.com/NotAShelf/tuigreet/releases
+
 Pre-built binaries of `tuigreet` for several architectures can be found in the
-[releases](https://github.com/NotAShelf/tuigreet/releases) section of this
-repository. The
-[tip prerelease](https://github.com/NotAShelf/tuigreet/releases/tag/tip) is
-continuously built and kept in sync with the `master` branch.
-
-## Running the tests
-
-Tests from the default features should run without any special consideration by
-running `cargo test`.
-
-If you intend to run the whole test suite, you will need to perform some setup.
-One of our features uses NSS to list and filter existing users on the system,
-and in order not to rely on actual users being created on the host, we use
-[libnss_wrapper](https://cwrap.org/nss_wrapper.html) to mock responses from NSS.
-Without this, the tests would use the real user list from your system and
-probably fail because it cannot find the one it looks for.
-
-```bash
-# After installing `libnss_wrapper` on your system (or compiling it to get the`.so`)
-# you can run those specific tests as such:
-$ export NSS_WRAPPER_PASSWD=contrib/fixtures/passwd
-$ export NSS_WRAPPER_GROUP=contrib/fixtures/group
-$ LD_PRELOAD=/path/to/libnss_wrapper.so cargo test --features nsswrapper nsswrapper_ # to run those tests specifically
-$ LD_PRELOAD=/path/to/libnss_wrapper.so cargo test --all-features # to run the whole test suite
-```
+[releases] section of this repository. You may download a binary for your
+architechture, and add it to your `PATH` to make it available on your system.
 
 ## Configuration
 
@@ -383,7 +376,7 @@ source code snippets to help identify and fix configuration issues. For example:
 TOML parsing error at line 5, column 15:
    4 | [layout]
    5 | width = "invalid_number"
-        |         ^^^^^^^^^^^^^^^^ expected integer, found string
+     |         ^^^^^^^^^^^^^^^^ expected integer, found string
    6 | window_padding = 2
 ```
 
@@ -558,6 +551,31 @@ Below is a screenshot of the greeter with the following theme applied:
 Which results in the following:
 
 ![Screenshot of tuigreet](https://github.com/NotAShelf/tuigreet/blob/master/contrib/assets/screenshot-themed.png)
+
+## Running the tests
+
+Tests from the default features should run without any special consideration by
+running `cargo test`.
+
+If you intend to run the whole test suite, you will need to perform some setup.
+One of our features uses NSS to list and filter existing users on the system,
+and in order not to rely on actual users being created on the host, we use
+[libnss_wrapper](https://cwrap.org/nss_wrapper.html) to mock responses from NSS.
+Without this, the tests would use the real user list from your system and
+probably fail because it cannot find the one it looks for.
+
+<!--markdownlint-disable MD013-->
+
+```bash
+# After installing `libnss_wrapper` on your system (or compiling it to get the`.so`)
+# you can run those specific tests as such:
+$ export NSS_WRAPPER_PASSWD=contrib/fixtures/passwd
+$ export NSS_WRAPPER_GROUP=contrib/fixtures/group
+$ LD_PRELOAD=/path/to/libnss_wrapper.so cargo test --features nsswrapper nsswrapper_ # to run those tests specifically
+$ LD_PRELOAD=/path/to/libnss_wrapper.so cargo test --all-features # to run the whole test suite
+```
+
+<!--markdownlint-enable MD013-->
 
 ## License
 

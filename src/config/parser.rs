@@ -220,6 +220,30 @@ fn apply_config_layer(dest: &mut Config, src: Config) {
   if src.background.doom.bottom_color.is_some() {
     dest.background.doom.bottom_color = src.background.doom.bottom_color;
   }
+  if src.background.matrix.head_color.is_some() {
+    dest.background.matrix.head_color = src.background.matrix.head_color;
+  }
+  if src.background.matrix.bright_color.is_some() {
+    dest.background.matrix.bright_color = src.background.matrix.bright_color;
+  }
+  if src.background.matrix.dim_color.is_some() {
+    dest.background.matrix.dim_color = src.background.matrix.dim_color;
+  }
+  if src.background.matrix.min_length.is_some() {
+    dest.background.matrix.min_length = src.background.matrix.min_length;
+  }
+  if src.background.matrix.max_length.is_some() {
+    dest.background.matrix.max_length = src.background.matrix.max_length;
+  }
+  if src.background.matrix.min_speed.is_some() {
+    dest.background.matrix.min_speed = src.background.matrix.min_speed;
+  }
+  if src.background.matrix.max_speed.is_some() {
+    dest.background.matrix.max_speed = src.background.matrix.max_speed;
+  }
+  if src.background.matrix.mutate_chance.is_some() {
+    dest.background.matrix.mutate_chance = src.background.matrix.mutate_chance;
+  }
 
   // Outputs: a non-empty list from a higher-priority layer fully replaces
   if !src.outputs.is_empty() {
@@ -515,6 +539,32 @@ pub fn extract_cli_config(matches: &getopts::Matches) -> Config {
       config.background.doom.top_color = Some(parts[0].to_string());
       config.background.doom.middle_color = Some(parts[1].to_string());
       config.background.doom.bottom_color = Some(parts[2].to_string());
+    }
+  }
+  if let Some(colors) = matches.opt_str("matrix-colors") {
+    let parts: Vec<&str> = colors.split(',').map(str::trim).collect();
+    if parts.len() == 3 {
+      config.background.matrix.head_color = Some(parts[0].to_string());
+      config.background.matrix.bright_color = Some(parts[1].to_string());
+      config.background.matrix.dim_color = Some(parts[2].to_string());
+    }
+  }
+  if let Some(s) = matches.opt_str("matrix-length") {
+    let parts: Vec<&str> = s.split(',').map(str::trim).collect();
+    if parts.len() == 2
+      && let (Ok(lo), Ok(hi)) = (parts[0].parse::<u16>(), parts[1].parse::<u16>())
+    {
+      config.background.matrix.min_length = Some(lo);
+      config.background.matrix.max_length = Some(hi);
+    }
+  }
+  if let Some(s) = matches.opt_str("matrix-speed") {
+    let parts: Vec<&str> = s.split(',').map(str::trim).collect();
+    if parts.len() == 2
+      && let (Ok(lo), Ok(hi)) = (parts[0].parse::<f32>(), parts[1].parse::<f32>())
+    {
+      config.background.matrix.min_speed = Some(lo);
+      config.background.matrix.max_speed = Some(hi);
     }
   }
   config

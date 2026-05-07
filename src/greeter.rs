@@ -828,6 +828,25 @@ impl Greeter {
       "visual mock-up mode: skip the greetd socket and fake the auth flow \
        locally",
     );
+    opts.optopt(
+      "",
+      "matrix-colors",
+      "matrix rain colors as HEAD,BRIGHT,DIM (each #RRGGBB or named)",
+      "HEAD,BRIGHT,DIM",
+    );
+    opts.optopt(
+      "",
+      "matrix-length",
+      "matrix trail length range as MIN,MAX in rows (default: 6,18)",
+      "MIN,MAX",
+    );
+    opts.optopt(
+      "",
+      "matrix-speed",
+      "matrix fall speed range as MIN,MAX in rows-per-frame (default: \
+       0.30,1.10)",
+      "MIN,MAX",
+    );
 
     opts
   }
@@ -1118,7 +1137,7 @@ impl Greeter {
     &mut self,
     cfg: &tuigreet::config::BackgroundConfig,
   ) {
-    use crate::ui::bg_animation::{Kind, doom};
+    use crate::ui::bg_animation::{Kind, doom, matrix};
 
     let Some(kind) = cfg.kind.as_deref().and_then(Kind::from_name) else {
       if let Some(name) = cfg.kind.as_deref()
@@ -1151,6 +1170,19 @@ impl Greeter {
           top:    parse(&cfg.doom.top_color, d.top),
           middle: parse(&cfg.doom.middle_color, d.middle),
           bottom: parse(&cfg.doom.bottom_color, d.bottom),
+        })
+      },
+      Kind::Matrix => {
+        let d = matrix::Options::default();
+        AnimationSpec::Matrix(matrix::Options {
+          head:          parse(&cfg.matrix.head_color, d.head),
+          bright:        parse(&cfg.matrix.bright_color, d.bright),
+          dim:           parse(&cfg.matrix.dim_color, d.dim),
+          min_length:    cfg.matrix.min_length.unwrap_or(d.min_length),
+          max_length:    cfg.matrix.max_length.unwrap_or(d.max_length),
+          min_speed:     cfg.matrix.min_speed.unwrap_or(d.min_speed),
+          max_speed:     cfg.matrix.max_speed.unwrap_or(d.max_speed),
+          mutate_chance: cfg.matrix.mutate_chance.unwrap_or(d.mutate_chance),
         })
       },
     };

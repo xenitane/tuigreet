@@ -121,6 +121,14 @@ The following animation is available out of the box:
   with `--doom-colors TOP,MIDDLE,BOTTOM` — each accepts `#RRGGBB`,
   `0xRRGGBB`, or any named color.
 
+You can also switch animations on the fly without restarting the greeter
+by hitting `F4`. This opens a small menu listing every available
+animation plus a `None` entry to disable the backdrop; selection rebuilds
+the active animation with that kind's default options. The hotkey is
+configurable through `--kb-background` or the `background` field of the
+`[keybindings]` section, the same way the existing F2/F3/F12 menus are
+configured.
+
 ## Installing Tuigreet
 
 [releases tab]: https://github.com/NotAShelf/tuigreet/releases/latest
@@ -284,9 +292,10 @@ mode = "characters"  # "hidden" or "characters"
 characters = "*"
 
 [keybindings]
-command = 2   # F2
-sessions = 3  # F3
-power = 12    # F12
+command = 2     # F2
+sessions = 3    # F3
+background = 4  # F4
+power = 12      # F12
 
 [background]
 kind = "doom"        # or "none" to disable

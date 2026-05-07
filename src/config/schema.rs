@@ -376,14 +376,19 @@ pub struct KeybindingsConfig {
   /// F-key for power menu (1-12)
   #[serde(default = "default_kb_power")]
   pub power: u8,
+
+  /// F-key for the on-the-fly background switcher menu (1-12)
+  #[serde(default = "default_kb_background")]
+  pub background: u8,
 }
 
 impl Default for KeybindingsConfig {
   fn default() -> Self {
     Self {
-      command:  default_kb_command(),
-      sessions: default_kb_sessions(),
-      power:    default_kb_power(),
+      command:    default_kb_command(),
+      sessions:   default_kb_sessions(),
+      power:      default_kb_power(),
+      background: default_kb_background(),
     }
   }
 }
@@ -555,4 +560,8 @@ const fn default_kb_sessions() -> u8 {
 
 const fn default_kb_power() -> u8 {
   12
+}
+
+const fn default_kb_background() -> u8 {
+  4
 }

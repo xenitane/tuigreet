@@ -194,6 +194,9 @@ fn apply_config_layer(dest: &mut Config, src: Config) {
   if src.keybindings.power != defaults.keybindings.power {
     dest.keybindings.power = src.keybindings.power;
   }
+  if src.keybindings.background != defaults.keybindings.background {
+    dest.keybindings.background = src.keybindings.background;
+  }
 
   // Background animation
   if src.background.kind.is_some() {
@@ -465,6 +468,11 @@ pub fn extract_cli_config(matches: &getopts::Matches) -> Config {
   {
     config.keybindings.power = k;
   }
+  if let Some(key) = matches.opt_str("kb-background")
+    && let Ok(k) = key.parse::<u8>()
+  {
+    config.keybindings.background = k;
+  }
   // Secret config
   if matches.opt_present("asterisks") {
     config.secret.mode = SecretMode::Characters;
@@ -547,6 +555,7 @@ impl Config {
       self.keybindings.command,
       self.keybindings.sessions,
       self.keybindings.power,
+      self.keybindings.background,
     ];
     if keys.iter().collect::<HashSet<_>>().len() != keys.len() {
       return Err(ConfigError::DuplicateKeybindings);
@@ -557,6 +566,7 @@ impl Config {
       ("command", self.keybindings.command),
       ("sessions", self.keybindings.sessions),
       ("power", self.keybindings.power),
+      ("background", self.keybindings.background),
     ] {
       if !(1..=12).contains(&key) {
         return Err(ConfigError::InvalidFKey(name.to_string(), key));

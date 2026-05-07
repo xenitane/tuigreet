@@ -24,6 +24,21 @@ pub enum Kind {
   Doom,
 }
 
+/// Catalog entry for a registered animation kind.
+#[allow(dead_code)]
+pub struct KindInfo {
+  pub kind:  Kind,
+  pub name:  &'static str,
+  pub label: &'static str,
+}
+
+/// Every registered animation kind, in menu display order.
+pub const KINDS: &[KindInfo] = &[KindInfo {
+  kind:  Kind::Doom,
+  name:  "doom",
+  label: "DOOM Fire",
+}];
+
 impl Kind {
   /// Resolve a config string to a [`Kind`], or `None` for unknown / disabled.
   pub fn from_name(name: &str) -> Option<Self> {
@@ -45,6 +60,21 @@ pub fn build(spec: &AnimationSpec) -> Box<dyn Animation> {
   match spec {
     AnimationSpec::Doom(opts) => Box::new(doom::Doom::new(opts.clone())),
   }
+}
+
+impl Kind {
+  /// Build a spec for this kind using its `Options::default()`.
+  #[must_use]
+  pub fn default_spec(self) -> AnimationSpec {
+    match self {
+      Self::Doom => AnimationSpec::Doom(doom::Options::default()),
+    }
+  }
+}
+
+/// Build an animation of the given kind using its default options.
+pub fn build_default(kind: Kind) -> Box<dyn Animation> {
+  build(&kind.default_spec())
 }
 
 /// Parse a color from `#RRGGBB`, `0xRRGGBB`, or any string accepted by

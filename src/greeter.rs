@@ -57,6 +57,8 @@ use crate::{
 
 /// Default render rate when animation is enabled
 pub const ANIMATION_DEFAULT_FPS: u32 = 30;
+/// Base/floor render rate
+pub const DEFAULT_FPS: u32 = 2;
 
 const DEFAULT_LOCALE: Locale = Locale::en_US;
 
@@ -1072,7 +1074,9 @@ impl Greeter {
   /// Render rate for the event loop.
   #[must_use]
   pub fn frame_rate(&self) -> f64 {
-    self.animation_fps.map_or(2.0, |fps| fps.max(1) as f64)
+    self
+      .animation_fps
+      .map_or(DEFAULT_FPS as f64, |fps| fps.max(DEFAULT_FPS) as f64)
   }
 
   pub fn set_prompt(&mut self, prompt: &str) {

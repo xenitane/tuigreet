@@ -742,6 +742,12 @@ impl Config {
           .to_string(),
       );
     }
+
+    // Warn about invalid fps settings
+    if self.background.fps.is_some_and(|f| f == 0) {
+      warnings
+        .push("Background fps is set to 0, this will be ignored".to_string());
+    }
   }
 
   /// Validate that a wrapper command exists and is executable

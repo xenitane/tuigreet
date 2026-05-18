@@ -15,6 +15,13 @@ pub enum PowerOption {
 
 /// Execute a power command (shutdown or reboot).
 pub async fn power(greeter: &mut Greeter, option: PowerOption) {
+  if greeter.mock {
+    if let Some(ref sender) = greeter.events {
+      let _ = sender.send(Event::Exit(tuigreet::AuthStatus::Cancel)).await;
+    }
+    return;
+  }
+
   let command = match greeter
     .powers
     .options

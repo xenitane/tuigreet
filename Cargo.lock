@@ -1912,12 +1912,10 @@ dependencies = [
  "greetd-stub",
  "greetd_ipc",
  "i18n-embed",
- "i18n-embed-fl",
  "nix",
  "notify",
  "rand",
  "ratatui",
- "rust-embed",
  "rust-ini",
  "tempfile",
  "tokio",
@@ -1926,10 +1924,10 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
  "tuigreet-config",
+ "tuigreet-locales",
  "tuigreet-system",
  "tuigreet-theme",
  "tuigreet-types",
- "unic-langid",
  "unicode-width 0.2.0",
  "utmp-rs",
  "uzers",
@@ -1947,6 +1945,15 @@ dependencies = [
  "serde",
  "toml 1.1.2+spec-1.1.0",
  "tracing",
+]
+
+[[package]]
+name = "tuigreet-locales"
+version = "0.10.2"
+dependencies = [
+ "i18n-embed",
+ "i18n-embed-fl",
+ "rust-embed",
 ]
 
 [[package]]

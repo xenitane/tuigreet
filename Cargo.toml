@@ -11,10 +11,11 @@ version      = "0.10.2"
 
 [workspace.dependencies]
 # Workspace dependencies
-tuigreet-config = { path = "crates/tuigreet-config" }
-tuigreet-system = { path = "crates/tuigreet-system" }
-tuigreet-theme  = { path = "crates/tuigreet-theme" }
-tuigreet-types  = { path = "crates/tuigreet-types" }
+tuigreet-config  = { path = "crates/tuigreet-config" }
+tuigreet-locales = { path = "crates/tuigreet-locales" }
+tuigreet-system  = { path = "crates/tuigreet-system" }
+tuigreet-theme   = { path = "crates/tuigreet-theme" }
+tuigreet-types   = { path = "crates/tuigreet-types" }
 
 # External
 ansi-to-tui = "7.0.0"

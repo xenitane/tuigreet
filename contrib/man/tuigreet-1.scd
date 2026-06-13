@@ -130,15 +130,15 @@ tuigreet - A graphical console greeter for greetd
 
 # AUTHORS
 
-Maintained by Antoine POPINEAU <antoine@popineau.eu>.
+Maintained by NotAShelf <git@notashelf.dev>.
 
 Contributed to by great people at
-https://github.com/apognu/tuigreet/graphs/contributors.
+https://github.com/NotAShelf/tuigreet/graphs/contributors.
 
 # DEVELOPMENT
 
 Issue reporting and development discussion should happen at
-https://github.com/apognu/tuigreet.
+https://github.com/NotAShelf/tuigreet.
 
 # SEE ALSO
 

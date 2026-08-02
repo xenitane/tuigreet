@@ -110,6 +110,7 @@ where
     let mut info_top_slot = None;
     let mut time_bottom_slot = None;
     let mut status_slot = None;
+    let mut footer_slot = None;
 
     // Top padding
     constraints.push(Constraint::Length(greeter.window_padding()));
@@ -129,6 +130,12 @@ where
     // Main content area
     let main_slot = constraints.len();
     constraints.push(Constraint::Min(1));
+
+    if greeter.footer_text.len() != 0 {
+      footer_slot = Some(constraints.len());
+      constraints
+        .push(Constraint::Length(greeter.footer_text.len() as u16 + 2));
+    }
 
     // Status at bottom (default behavior)
     if matches!(
@@ -355,6 +362,44 @@ where
         let status_right = Paragraph::new(status_right_text);
 
         f.render_widget(status_right, status_chunks[STATUSBAR_RIGHT_INDEX]);
+      }
+    }
+
+    if let Some(slot) = footer_slot {
+      let footer_area = chunks[slot];
+      let footer_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(
+          [
+            Constraint::Length(greeter.window_padding()),
+            Constraint::Fill(1),
+            Constraint::Length(greeter.window_padding()),
+          ]
+          .as_ref(),
+        )
+        .split(footer_area);
+      let padded_footer_chunks = Layout::default()
+        .constraints(
+          (0..greeter.footer_text.len()).map(|_| Constraint::Length(1)),
+        )
+        .split(footer_chunks[1]);
+
+      for (idx, line) in greeter.footer_text.iter().enumerate() {
+        let line_chunks = Layout::default()
+          .direction(Direction::Horizontal)
+          .constraints(
+            [
+              Constraint::Fill(1),
+              Constraint::Length(line.chars().count() as u16),
+              Constraint::Fill(1),
+            ]
+            .as_ref(),
+          )
+          .split(padded_footer_chunks[idx]);
+        f.render_widget(
+          Paragraph::new(Span::from(line)).style(theme.of(&[Themed::Time])),
+          line_chunks[1],
+        );
       }
     }
 

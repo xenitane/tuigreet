@@ -379,6 +379,17 @@ pub struct WidgetConfig {
   /// Status bar item visibility
   #[serde(default)]
   pub status_bar: StatusBarConfig,
+
+  /// Footer text
+  #[serde(default)]
+  pub footer: FooterConfig,
+}
+
+/// Footer text configuration
+#[derive(Debug, Clone, Deserialize, Default, Serialize, PartialEq, Eq)]
+pub struct FooterConfig {
+  #[serde(default)]
+  pub text: Vec<String>
 }
 
 /// Status bar item visibility configuration

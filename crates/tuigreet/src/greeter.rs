@@ -170,6 +170,8 @@ pub struct Greeter {
   pub status_show_session_status: bool,
   pub status_show_caps_lock:      bool,
 
+  pub footer_text: Vec<String>,
+
   // Background animation, drawn before the login UI.
   pub animation:     Option<Box<dyn Animation>>,
   // Configured animation FPS, when an animation is active.
@@ -241,6 +243,7 @@ impl Default for Greeter {
       status_show_background:     true,
       status_show_session_status: true,
       status_show_caps_lock:      true,
+      footer_text:                Vec::new(),
       animation:                  None,
       animation_fps:              None,
       mock:                       false,
@@ -1484,6 +1487,8 @@ impl Greeter {
       config.layout.widgets.status_bar.show_session_status;
     self.status_show_caps_lock =
       config.layout.widgets.status_bar.show_caps_lock;
+    //
+    self.footer_text = config.layout.widgets.footer.text.clone();
     // Animation
     self.set_background_from_config(&config.background);
     self.populate_backgrounds_menu();
